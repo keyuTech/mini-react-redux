@@ -1,34 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { connect, createStore, Provider } from "./redux.jsx";
+import React from "react";
+import { userConnect } from "./connecters/userConnecter.js";
+
+const state = {
+  user: {name: 'aaa', age: 1},
+  group: 'group'
+}
+const reducer = (state, {type, payload}) => {
+  if (type === 'updateUser') {
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        ...payload
+      }
+    }
+  } else {
+    return state
+  }
+}
+
+const store = createStore(state, reducer)
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <Provider value={store}>
+      <Component1/>
+      <Component2/>
+      <Component3/>
+    </Provider>
   )
 }
 
+const Component1 = () => {
+  console.log(1);
+  return <section>第一个组件: <User/></section>
+}
+const Component2 = () => {
+  console.log(2);
+  return <section>第二个组件: <UserModifier/></section>
+}
+const Component3 = connect(state => {
+  return {group: state.group}
+})(({group}) => {
+  console.log(3);
+  return <section>第三个组件: {group}</section>
+})
+
+
+const User = userConnect(({user}) => {
+  console.log('user');
+  return <span>user: {user.name} 111</span>
+});
+
+const ajax = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({data: {name: '3s后'}})
+    }, 3000)
+  })
+}
+
+const fetchUser = (dispatch) => {
+  ajax().then((data) => {
+    dispatch({type: 'updateUser', payload: data.data})
+  })
+}
+
+// const UserModifier = userConnect(({user, updateUser, children}) => {
+//   console.log('userModifier');
+//   const onChange = (e) => {
+//     updateUser({name: e.target.value})
+//   }
+//   return <>
+//     {children}
+//     <input type="text" value={user.name} onChange={onChange}/>
+//   </>
+// });
+const UserModifier = connect(null, null)(({state, dispatch, children}) => {
+  console.log('userModifier');
+  const onClick = (e) => {
+    // dispatch(fetchUser)
+    dispatch({type: 'updateUser', payload: ajax().then(response => response.data)})
+  }
+  return <>
+    {children}
+    <button onClick={onClick}>异步action</button>
+  </>
+});
+
 export default App
+
