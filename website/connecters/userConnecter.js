@@ -1,4 +1,4 @@
-import { connect } from "../redux.jsx";
+import { connect } from "../../src/index.js";
 
 const userSelector = (state) => {
   return {user: state.user}

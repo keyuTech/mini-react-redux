@@ -1,4 +1,4 @@
-import { connect, createStore, Provider } from "./redux.jsx";
+import { connect, createStore, Provider } from "../src/index.js";
 import React from "react";
 import { userConnect } from "./connecters/userConnecter.js";
 
