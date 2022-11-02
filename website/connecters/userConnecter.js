@@ -1,4 +1,4 @@
-import { connect } from "../../src/index.js";
+import { connect } from "../../src/index.jsx";
 
 const userSelector = (state) => {
   return {user: state.user}

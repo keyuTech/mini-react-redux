@@ -1,4 +1,4 @@
-import { connect, createStore, Provider } from "../src/index.js";
+import { connect, createStore, Provider } from "../src/index.jsx";
 import React from "react";
 import { userConnect } from "./connecters/userConnecter.js";
 
