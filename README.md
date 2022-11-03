@@ -21,14 +21,14 @@
   })
   ```
 * Provider - 使组件可以获取state
-```javascript
-import {Provider, createStore} from 'index.jsx';
+  ```javascript
+  import {Provider, createStore} from 'index.jsx';
 
-const store = createStore(state, reducer);
-<Provider store={store}>
+  const store = createStore(state, reducer);
+  <Provider store={store}>
   <App/>
-</Provider>
-```
+  </Provider>
+  ```
 
 ## 特点
 mini-react-redux原生支持函数Action和Promise Action，不必使用类似[redux-thunk](https://github.com/reduxjs/redux-thunk)或
