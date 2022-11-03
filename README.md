@@ -1,5 +1,5 @@
 # mini-react-redux
-只具备最基本功能的react-redux，扩展了对函数Action和Promise Action的原生支持。
+只具备最基本功能的React-Redux，继承了React-Redux的相关API并扩展了对函数Action和Promise Action的原生支持。
 
 ## API
 * createStore() - 初始化一个Store，应用中应该有且只有一个Store
@@ -79,4 +79,41 @@ mini-react-redux原生支持函数Action和Promise Action，不必使用类似[r
 ### 4. 数据流
 > 单向数据流
 
-由于用户只能接触到View，因此应该由用户发起Action，通过调用dispatch将Action传递给reducer，Store会自动调用reducer，传入当前State和Action这两个参数，随着State的变化，Store会调用subscribe以重新渲染View
+由于用户只能接触到View，因此应该由用户发起Action，通过调用dispatch将Action传递给Reducer，Store会自动调用Reducer，传入当前State和Action这两个参数，随着State的变化，Store会调用subscribe以重新渲染View
+
+## React-Redux
+
+React-Redux在Redux的基础上新增了一些API，并且在最新的React-Redux中提供了一些Hooks API。
+React-Redux将组件分为Redux组件和UI组件，其中Redux组件负责管理数据和逻辑，而UI组件只负责处理UI的展示，由此React-Redux新增了 
+`connect`方法用于将Redux组件和UI组件连接起来，使得UI组件能够根据State渲染并能根据用户操作更新State。
+
+### 新增API
+* connect - 用于将Redux和UI组件连接起来
+  connect是一个高阶组件，它接收两个参数和一个组件，返回一个处理后的组件
+  ```javascript
+  import {connect} from 'reac-redux'
+  const connectedComponent = connect(mapStateToProps, mapDispatchToProps)((props) => {
+    return <div>connect Redux to UI</div>
+  })
+  ```
+* mapStateToProps - 用于将React-Redux中的State映射到UI组件的Props中，方便使用State中的字段
+  mapStateToProps是一个函数，用于获取State中的指定字段，并映射到UI组件的Props中
+  ```javascript
+  const mapStateToProps = (state) => {
+    return {userName: state.user.userName}
+  }
+  ```
+  上述例子可以使得UI组件直接在Props中获取 `userName`
+* mapDispatchToProps - 用于将React-Redux中的Dispatch映射到UI组件的Props中，方便在UI组件中直接调用对应的Dispatch
+  mapDispatchToProps也是一个函数，将Dispatch映射到UI组件的Props中
+  ```javascript
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      updateUser: (payload) => {
+        diapatch({type: 'updateUser', payload})
+      }
+    }
+  }
+  ```
+  上述例子可以使得UI组件中直接调用 `updateUser` 方法更新State
+* Provider - 用于透传State，使React-Redux组件可以获取State
